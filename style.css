@@ -1,0 +1,14 @@
+body{
+	background-color: #FED9B3FF;
+}
+
+#game-container{
+	height: 600px;
+	width: 800px;
+	border: 2px solid black;
+}
+
+.brick{
+	height: 20px;
+	width: 150px;
+}
