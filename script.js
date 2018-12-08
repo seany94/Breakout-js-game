@@ -3,14 +3,10 @@ var canvas = document.getElementById('game-container');
 canvas.width = 700;
 canvas.height = 600;
 var ctx = canvas.getContext('2d');
-// ctx.fillStyle = "red";
-// ctx.lineWidth = 3;
-// ctx.strokeStyle = "red";
-// ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
 // Bricks style
 var brickRow = getRandom(2, 5);
-var brickCol = getRandom(5, 9);
+var brickCol = getRandom(5, 8);
 var brickWidth = 75;
 var brickHeight = 20;
 var brickPadding = 10;
@@ -21,9 +17,11 @@ var bricksArr = [];
 for(var i = 0; i < brickCol; i++) {
     bricksArr[i] = [];
     for(var j = 0; j < brickRow; j++) {
+        // Brick object to store every single brick value
         bricksArr[i][j] = {
             x: 0,
-            y: 0
+            y: 0,
+            appearance: true
         };
     }
 }
@@ -72,17 +70,20 @@ function createPaddle() {
 function createBricks() {
     for(var i = 0; i < brickCol; i++) {
         for(var j = 0; j < brickRow; j++) {
-            // Set position of each brick
-            var brickX = (i * (brickWidth + brickPadding)) + brickOffsetLeft;
-            var brickY = (j * (brickHeight + brickPadding)) + brickOffsetTop;
-            bricksArr[i][j].x = brickX;
-            bricksArr[i][j].y = brickY;
-            // Create bricks
-            ctx.beginPath();
-            ctx.rect(brickX, brickY, brickWidth, brickHeight);
-            ctx.fillStyle = "#0095DD";
-            ctx.fill();
-            ctx.closePath();
+            // Create bricks only when brick appearance is true
+            if(bricksArr[i][j].appearance === true){
+                // Set position of each brick
+                var brickX = (i * (brickWidth + brickPadding)) + brickOffsetLeft;
+                var brickY = (j * (brickHeight + brickPadding)) + brickOffsetTop;
+                bricksArr[i][j].x = brickX;
+                bricksArr[i][j].y = brickY;
+                // Create bricks
+                ctx.beginPath();
+                ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
         }
     }
 }
@@ -90,9 +91,15 @@ function createBricks() {
 var moveBall = function() {
     // Clear the canvas every time the function run
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Recreate canvas after clearing
+    ctx.fillStyle = "red";
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "red";
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
     createBricks();
     createBall();
     createPaddle();
+    collision();
     x += dx;
     y += dy;
     // checking for the circumference of ball touching the wall
@@ -108,7 +115,12 @@ var moveBall = function() {
             dy = -dy;
         }
         else {
-            document.location.reload();
+            // Stop ball from moving and show game over screen
+            clearInterval(interval);
+            gameOver();
+            document.querySelector('.game-over').addEventListener("click", function(){
+                document.location.reload();
+            });
         }
     }
     // checking for whether the paddle goes off the canvas
@@ -119,6 +131,23 @@ var moveBall = function() {
         paddle -= 2;
     }
 }
+
+// Detect collision for every brick in row and column
+function collision() {
+    for(var i = 0; i < brickCol; i++) {
+        for(var j = 0; j < brickRow; j++) {
+            var brickObj = bricksArr[i][j];
+            // Check if ball collide with brick if so ball bounce back and brick disappear
+            if(brickObj.appearance === true){
+                if(x > brickObj.x && x < brickObj.x + brickWidth && y > brickObj.y && y < brickObj.y + brickHeight){
+                    dy = -dy;
+                    brickObj.appearance = false;
+                }
+            }
+        }
+    }
+}
+
 // Function to check for user key up and down
 // Key code 37 is left arrow key and key code 39 is right arrow key
 function keyDown(status) {
@@ -138,9 +167,19 @@ function keyUp(status) {
         leftPressed = false;
     }
 }
+
+// Create a game over screen
+var gameOver = function(){
+    var gameOverBox = document.createElement('div');
+    gameOverBox.setAttribute("class", "game-over");
+    gameOverBox.innerHTML = "Game Over!<br><span>Click here to retry</span>";
+    document.body.appendChild(gameOverBox);
+    var gameOverClick = document.querySelector('.game-over');
+}
+
 document.addEventListener("keydown", keyDown, false);
 document.addEventListener("keyup", keyUp, false);
-setInterval(moveBall, 10);
+var interval = setInterval(moveBall, 10);
 
 window.onload = function(){
 }

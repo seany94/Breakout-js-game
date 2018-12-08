@@ -12,3 +12,20 @@ body{
 	height: 20px;
 	width: 150px;
 }*/
+
+.game-over {
+	position: fixed;
+	top: 8px;
+	padding: 254px 236px;
+  background: rgba(255, 255, 255, 0.5);
+  font-family: sans-serif;
+  font-size: 40px;
+  font-weight: bold;
+  color: red;
+}
+
+span{
+  font-size: 29px;
+  font-weight: lighter;
+  color: #AFFF91FF;
+}
