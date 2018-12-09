@@ -3,6 +3,8 @@ var canvas = document.getElementById('game-container');
 canvas.width = 700;
 canvas.height = 600;
 var ctx = canvas.getContext('2d');
+// Track score
+var score = 0;
 
 // Bricks style
 var brickRow = getRandom(2, 5);
@@ -14,11 +16,11 @@ var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 
 var bricksArr = [];
-for(var i = 0; i < brickCol; i++) {
+for(var i = 0; i < brickCol; i++){
     bricksArr[i] = [];
-    for(var j = 0; j < brickRow; j++) {
+    for(var j = 0; j < brickRow; j++){
         // Brick object to store every single brick value
-        bricksArr[i][j] = {
+        bricksArr[i][j] ={
             x: 0,
             y: 0,
             appearance: true
@@ -27,7 +29,7 @@ for(var i = 0; i < brickCol; i++) {
 }
 
 // Math random function to generate range for math random
-function getRandom(min, max) {
+function getRandom(min, max){
     return Math.floor(Math.random() * (max - min) + min);
 }
 
@@ -50,6 +52,13 @@ var paddle = (canvas.width - paddleWidth) / 2;
 var rightPressed = false;
 var leftPressed = false;
 
+var createScore = function(){
+    ctx.font = "15px Helvetica";
+    ctx.fillStyle = "#7EFF37FF";
+    ctx.weight = "bold";
+    ctx.fillText("Score: " + score, 8, 18);
+}
+
 var createBall = function(){
     // Create ball
     ctx.beginPath();
@@ -59,17 +68,17 @@ var createBall = function(){
     ctx.closePath();
 }
 
-function createPaddle() {
+function createPaddle(){
     ctx.beginPath();
     ctx.rect(paddle, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "#0095DD";
+    ctx.fillStyle = "#AFFF91FF";
     ctx.fill();
     ctx.closePath();
 }
 
-function createBricks() {
-    for(var i = 0; i < brickCol; i++) {
-        for(var j = 0; j < brickRow; j++) {
+function createBricks(){
+    for(var i = 0; i < brickCol; i++){
+        for(var j = 0; j < brickRow; j++){
             // Create bricks only when brick appearance is true
             if(bricksArr[i][j].appearance === true){
                 // Set position of each brick
@@ -80,7 +89,7 @@ function createBricks() {
                 // Create bricks
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = "#0095DD";
+                ctx.fillStyle = "#AFFF91FF";
                 ctx.fill();
                 ctx.closePath();
             }
@@ -88,7 +97,7 @@ function createBricks() {
     }
 }
 
-var moveBall = function() {
+var moveBall = function(){
     // Clear the canvas every time the function run
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Recreate canvas after clearing
@@ -96,6 +105,7 @@ var moveBall = function() {
     ctx.lineWidth = 3;
     ctx.strokeStyle = "red";
     ctx.strokeRect(0, 0, canvas.width, canvas.height);
+    createScore();
     createBricks();
     createBall();
     createPaddle();
@@ -103,45 +113,54 @@ var moveBall = function() {
     x += dx;
     y += dy;
     // checking for the circumference of ball touching the wall
-    if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
         dx = -dx;
     }
-    else if(y + dy < ballRadius) {
+    else if(y + dy < ballRadius){
         dy = -dy;
     }
     else if(y + dy > canvas.height - ballRadius){
         // Condition to allow the ball to bounce off paddle so as to not to end game
-        if(x > paddle && x < paddle + paddleWidth) {
+        if(x > paddle && x < paddle + paddleWidth){
             dy = -dy;
         }
         else {
             // Stop ball from moving and show game over screen
             clearInterval(interval);
             gameOver();
-            document.querySelector('.game-over').addEventListener("click", function(){
+            document.querySelector('.endgame-lose').addEventListener("click", function(){
                 document.location.reload();
             });
         }
     }
-    // checking for whether the paddle goes off the canvas
-    else if(rightPressed && paddle < canvas.width - paddleWidth) {
+    // Checking for whether the paddle goes off the canvas
+    else if(rightPressed && paddle < canvas.width - paddleWidth){
         paddle += 2;
     }
-    else if(leftPressed && paddle > 0) {
+    else if(leftPressed && paddle > 0){
         paddle -= 2;
     }
 }
 
 // Detect collision for every brick in row and column
-function collision() {
-    for(var i = 0; i < brickCol; i++) {
-        for(var j = 0; j < brickRow; j++) {
+function collision(){
+    for(var i = 0; i < brickCol; i++){
+        for(var j = 0; j < brickRow; j++){
             var brickObj = bricksArr[i][j];
             // Check if ball collide with brick if so ball bounce back and brick disappear
             if(brickObj.appearance === true){
                 if(x > brickObj.x && x < brickObj.x + brickWidth && y > brickObj.y && y < brickObj.y + brickHeight){
                     dy = -dy;
                     brickObj.appearance = false;
+                    score++;
+                        // Check if all bricks disappear from canvas to declare win
+                        if(score === brickRow * brickCol){
+                            clearInterval(interval);
+                            win();
+                            document.querySelector('.endgame-win').addEventListener("click", function(){
+                            document.location.reload();
+                        });
+                    }
                 }
             }
         }
@@ -150,35 +169,55 @@ function collision() {
 
 // Function to check for user key up and down
 // Key code 37 is left arrow key and key code 39 is right arrow key
-function keyDown(status) {
-    if(status.keyCode == 39) {
+function keyDown(status){
+    if(status.keyCode == 39){
         rightPressed = true;
     }
-    else if(status.keyCode == 37) {
+    else if(status.keyCode == 37){
         leftPressed = true;
     }
 }
 
-function keyUp(status) {
-    if(status.keyCode == 39) {
+function keyUp(status){
+    if(status.keyCode == 39){
         rightPressed = false;
     }
-    else if(status.keyCode == 37) {
+    else if(status.keyCode == 37){
         leftPressed = false;
+    }
+}
+
+// Make paddle stick to user cursor
+function mouseMove(status){
+    var relativePad = status.clientX - canvas.offsetLeft;
+    // Checking for whether the paddle goes off the canvas
+    if(relativePad - (paddleWidth / 2) > 0 && relativePad < canvas.width - (paddleWidth / 2)){
+            // Fix cursor in the middle of paddle
+            paddle = relativePad - paddleWidth / 2;
     }
 }
 
 // Create a game over screen
 var gameOver = function(){
     var gameOverBox = document.createElement('div');
-    gameOverBox.setAttribute("class", "game-over");
+    gameOverBox.setAttribute("class", "endgame-lose");
     gameOverBox.innerHTML = "Game Over!<br><span>Click here to retry</span>";
     document.body.appendChild(gameOverBox);
-    var gameOverClick = document.querySelector('.game-over');
+    var gameOverClick = document.querySelector('.endgame-lose');
+}
+
+// Create win screen
+var win = function(){
+    var winBox = document.createElement('div');
+    winBox.setAttribute("class", "endgame-win");
+    winBox.innerHTML = "Congratulation!<br><span>You beat the game<br>Click here to retry</span></span><br><span>Score: <span>" + score;
+    document.body.appendChild(winBox);
+    var winClick = document.querySelector('.endgame-win');
 }
 
 document.addEventListener("keydown", keyDown, false);
 document.addEventListener("keyup", keyUp, false);
+document.addEventListener("mousemove", mouseMove, false);
 var interval = setInterval(moveBall, 10);
 
 window.onload = function(){

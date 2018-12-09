@@ -25,13 +25,15 @@ Additional stuff:-
 
 Milestone:-
 
-MVP/Min:- Getting the collision of the ball and other game objects correct. Ball can bounce of objects Example slider/wall/brick. Bricks disappear when ball hits it
+MVP/Min:- Getting the collision of the ball and other game objects correct. Ball can bounce of objects Example slider/wall/brick. Bricks disappear when ball hits it.
+
+Further:- Implement lives/extra chances for players instead of instant game over
+
+Further:- Prompt for user input name. Update points and show points scored together with user input name user on end game screen
 
 Further:- Get formula of ball angle when bounce of object and acceleration after certain number of bricks disappear
 
 Further:- Implement points whenever ball hits a brick. 1 brick disappear = 1 point. Stage clear when all brick disappear and show points earned.
-
-Further:- Implement lives/extra chances for players instead of instant game over
 
 Further:- Random the size and number or bricks every time the user starts a new game
 
