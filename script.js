@@ -38,29 +38,56 @@ function getRandom(min, max){
 // var brickRows = getRandom(2, 5);
 // var brickCols = getRandom(8, 15);
 
-// Hard coded the position where the ball will start and how it moves
-var x = canvas.width / 2;
-var y = canvas.height - 30;
+// Random the position where the ball will start and how it moves
+var x = getRandom(100, 650);
+var y = getRandom(300, 600);
+// The distance and direction of the ball travel
 var dx = 2;
 var dy = -2;
+
 // Circumference of ball
 var ballRadius = 10;
+
 // Create paddle
 var paddleHeight = 10;
-var paddleWidth = 75;
+var paddleWidth = 100;
 var paddle = (canvas.width - paddleWidth) / 2;
+
 // Check for user key press
 var rightPressed = false;
 var leftPressed = false;
 
+// Check for user input and the length
+var userName = prompt("Please input your name");
+if(userName == null){
+    document.location.reload();
+}
+else if(userName.length > 20){
+        alert("Limit username to 20 characters max");
+        document.location.reload();
+}
+
+// Check for user input on using mouse or keyboard
+var option = prompt("Do you want to use the keyboard or the mouse to play? K/M");
+var optionLower = option.toLowerCase();
+if(option == null){
+    document.location.reload();
+}
 
 window.onload = function(){
+
+    var createName = function(){
+        ctx.font = "15px Helvetica";
+        ctx.fillStyle = "#7EFF37FF";
+        ctx.weight = "bold";
+        ctx.fillText(userName, 8, 18);
+    }
 
     var createScore = function(){
         ctx.font = "15px Helvetica";
         ctx.fillStyle = "#7EFF37FF";
         ctx.weight = "bold";
-        ctx.fillText("Score: " + score, 8, 18);
+        ctx.fillText("Score: " + score, 325, 18);
     }
 
     var createLives = function(){
@@ -116,6 +143,7 @@ window.onload = function(){
         ctx.lineWidth = 3;
         ctx.strokeStyle = "red";
         ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        createName();
         createScore();
         createLives();
         createBricks();
@@ -167,10 +195,10 @@ window.onload = function(){
         }
         // Checking for whether the paddle goes off the canvas
         else if(rightPressed && paddle < canvas.width - paddleWidth){
-            paddle += 2;
+            paddle += 4;
         }
         else if(leftPressed && paddle > 0){
-            paddle -= 2;
+            paddle -= 4;
         }
     }
 
@@ -238,7 +266,7 @@ window.onload = function(){
     var gameOver = function(){
         var gameOverBox = document.createElement('div');
         gameOverBox.setAttribute("class", "endgame-lose");
-        gameOverBox.innerHTML = "Game Over!<br><span>Don't give up try harder!</span><br><span>Click here to retry</span><br><span>Score: </span>" + score + " " + "<span>---</span>" + " " + "<span>Lives: </span>" + lives;
+        gameOverBox.innerHTML = "Game Over!<br><span>Don't give up try harder!</span><br><span>Click here to retry</span><br><br>" + "<span>" + userName + "</span><br>" + "<span>Score: </span>" + score + " " + "<span>---</span>" + " " + "<span>Lives: </span>" + lives;
         document.body.appendChild(gameOverBox);
         var gameOverClick = document.querySelector('.endgame-lose');
     }
@@ -247,13 +275,25 @@ window.onload = function(){
     var win = function(){
         var winBox = document.createElement('div');
         winBox.setAttribute("class", "endgame-win");
-        winBox.innerHTML = "Congratulation!<br><span>You beat the game<br>Click here to retry</span></span><br><span>Score: </span>" + score + " " + "<span>---</span>" + " " + "<span>Lives: </span>" + lives;
+        winBox.innerHTML = "Congratulation!<br><span>You beat the game<br>Click here to retry</span></span><br><br>" + "<span>" + userName + "</span><br>" + "<span>Score: </span>" + score + " " + "<span>---</span>" + " " + "<span>Lives: </span>" + lives;
         document.body.appendChild(winBox);
         var winClick = document.querySelector('.endgame-win');
     }
 
-    document.addEventListener("keydown", keyDown, false);
-    document.addEventListener("keyup", keyUp, false);
-    document.addEventListener("mousemove", mouseMove, false);
-    var interval = setInterval(moveBall, 5);
+    // Get user input on whether they want to use keyboard or mouse in prompt outside window onload function
+    var choice = function(options){
+        if(optionLower.includes('k') === true){
+            document.addEventListener("keydown", keyDown, false);
+            document.addEventListener("keyup", keyUp, false);
+        }
+        else if(optionLower.includes('m') === true){
+            document.addEventListener("mousemove", mouseMove, false);
+        }
+        else{
+            document.location.reload();
+        }
+    }
+    choice(optionLower);
+
+    var interval = setInterval(moveBall, 10);
 }

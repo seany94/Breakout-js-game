@@ -16,7 +16,7 @@ body{
 .endgame-lose {
 	position: fixed;
 	top: 8px;
-	padding: 208px 195.5px;
+	padding: 162px 195.5px;
   background: rgba(255, 255, 255, 0.5);
   font-family: sans-serif;
   font-size: 40px;
@@ -27,7 +27,7 @@ body{
 .endgame-win{
 	position: fixed;
 	top: 8px;
-	padding: 208px 201px;
+	padding: 162px 201px;
   background: rgba(255, 255, 255, 0.5);
   font-family: sans-serif;
   font-size: 40px;

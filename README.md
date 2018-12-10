@@ -31,9 +31,9 @@ Further:- Implement lives/extra chances for players instead of instant game over
 
 Further:- Prompt for user input name. Update points and show points scored together with user input name user on end game screen
 
-Further:- Get formula of ball angle when bounce of object and acceleration after certain number of bricks disappear
+Further:- Allow user to choose whether they want to play with arrow keys or with mouse movement
 
-Further:- Implement points whenever ball hits a brick. 1 brick disappear = 1 point. Stage clear when all brick disappear and show points earned.
+Further:- Input acceleration after certain number of bricks disappear
 
 Further:- Random the size and number or bricks every time the user starts a new game
 
