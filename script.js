@@ -8,13 +8,13 @@ var score = 0;
 var lives = 3;
 
 // Bricks style
-var brickRow = getRandom(2, 5);
-var brickCol = getRandom(5, 8);
+var brickRow = getRandom(2, 6);
+var brickCol = 8;
 var brickWidth = 75;
 var brickHeight = 20;
 var brickPadding = 10;
 var brickOffsetTop = 30;
-var brickOffsetLeft = 30;
+var brickOffsetLeft = 15;
 
 var bricksArr = [];
 for(var i = 0; i < brickCol; i++){
@@ -122,6 +122,9 @@ window.onload = function(){
         createBall();
         createPaddle();
         collision();
+        // Calculate the collision at the edge of the paddle
+        var paddleDistX = Math.abs(x - paddle - paddleWidth / 2);
+        var paddleColX = paddleDistX - paddleWidth / 2;
         x += dx;
         y += dy;
         // checking for the circumference of ball touching the wall
@@ -132,8 +135,8 @@ window.onload = function(){
             dy = -dy;
         }
         else if(y + dy > canvas.height - ballRadius){
-            // Condition to allow the ball to bounce off paddle so as to not to end game
-            if(x > paddle && x < paddle + paddleWidth){
+            // Condition to allow the ball to bounce off paddle so as to not to end game + added collision to edge of paddle
+            if(x > paddle && x < paddle + paddleWidth || (paddleColX * paddleColX < (ballRadius * ballRadius))){
                 dy = -dy;
             }
             else {
@@ -141,8 +144,13 @@ window.onload = function(){
                 lives--;
                 if(lives === 0){
                     // Stop ball from moving and show game over screen
-                    clearInterval(interval);
                     gameOver();
+                    clearInterval(interval);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = "red";
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = "red";
+                    ctx.strokeRect(0, 0, canvas.width, canvas.height);
                     document.querySelector('.endgame-lose').addEventListener("click", function(){
                         document.location.reload();
                     });
@@ -173,14 +181,19 @@ window.onload = function(){
                 var brickObj = bricksArr[i][j];
                 // Check if ball collide with brick if so ball bounce back and brick disappear
                 if(brickObj.appearance === true){
-                    if(x > brickObj.x && x < brickObj.x + brickWidth && y > brickObj.y && y < brickObj.y + brickHeight){
+                    if(x > brickObj.x && x < brickObj.x + brickWidth && y > brickObj.y && y < brickObj.y + brickHeight || ((x * x + y * y) < (ballRadius * ballRadius))){
                         dy = -dy;
                         brickObj.appearance = false;
                         score++;
                             // Check if all bricks disappear from canvas to declare win
                             if(score === brickRow * brickCol){
-                                clearInterval(interval);
                                 win();
+                                clearInterval(interval);
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                ctx.fillStyle = "red";
+                                ctx.lineWidth = 3;
+                                ctx.strokeStyle = "red";
+                                ctx.strokeRect(0, 0, canvas.width, canvas.height);
                                 document.querySelector('.endgame-win').addEventListener("click", function(){
                                 document.location.reload();
                             });
@@ -225,7 +238,7 @@ window.onload = function(){
     var gameOver = function(){
         var gameOverBox = document.createElement('div');
         gameOverBox.setAttribute("class", "endgame-lose");
-        gameOverBox.innerHTML = "Game Over!<br><span>Click here to retry</span>";
+        gameOverBox.innerHTML = "Game Over!<br><span>Don't give up try harder!</span><br><span>Click here to retry</span><br><span>Score: </span>" + score + " " + "<span>---</span>" + " " + "<span>Lives: </span>" + lives;
         document.body.appendChild(gameOverBox);
         var gameOverClick = document.querySelector('.endgame-lose');
     }
@@ -242,5 +255,5 @@ window.onload = function(){
     document.addEventListener("keydown", keyDown, false);
     document.addEventListener("keyup", keyUp, false);
     document.addEventListener("mousemove", mouseMove, false);
-    var interval = setInterval(moveBall, 10);
+    var interval = setInterval(moveBall, 5);
 }
