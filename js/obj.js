@@ -74,6 +74,7 @@ else if(userName.length > 20){
 
 // Check for user input on using mouse or keyboard
 var option = prompt("Do you want to use the keyboard or the mouse to play? K/M");
+alert("Please note that the size of bricks/paddle/ball is randomize. Do not be alarm :D");
 var optionLower = option.toLowerCase();
 if(option == null){
     document.location.reload();
