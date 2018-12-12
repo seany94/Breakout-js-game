@@ -18,10 +18,16 @@ window.onload = function(){
         createBallSpeed();
         createTimer();
         collision();
+        // Check for timer and print timer text
+        if(timer < 20){
+            createTimerText();
+        }
         // Calculate the collision at line of the paddle
         var paddleDistX = Math.abs(x - paddle - paddleWidth / 2);
+        var paddleDistY = Math.abs(y - (canvas.height - paddleHeight) - paddleHeight / 2);
         // Calculate the collision at the edge of the paddle
         var paddleColX = paddleDistX - paddleWidth / 2;
+        var paddleColY = paddleDistY - paddleHeight / 2;
         x += dx;
         y += dy;
         // checking for the circumference of ball touching the wall
@@ -33,7 +39,7 @@ window.onload = function(){
         }
         else if(y + dy > canvas.height - ballRadius){
             // Condition to allow the ball to bounce off paddle so as to not to end game + added collision to edge of paddle
-            if(paddleDistX < paddleWidth || (paddleColX * paddleColX < (ballRadius * ballRadius))){
+            if(paddleDistX < (paddleWidth / 2) || ((paddleColX * paddleColX + paddleColY * paddleColY) < (ballRadius * ballRadius))){
                 dy = -dy;
             }
             else {
@@ -50,9 +56,6 @@ window.onload = function(){
                     ctx.lineWidth = 3;
                     ctx.strokeStyle = "red";
                     ctx.strokeRect(0, 0, canvas.width, canvas.height);
-                    document.querySelector('.endgame-lose').addEventListener("click", function(){
-                        document.location.reload();
-                    });
                 }
                 else{
                     // Create the ball back in canvas when there is still lives
@@ -86,7 +89,7 @@ window.onload = function(){
                     // Calculate the collision at the edge of the brick
                     var brickColX = brickDistX - brickWidth / 2;
                     var brickColY = brickDistY - brickHeight / 2;
-                    if(brickDistX < brickWidth && brickDistY <brickHeight || ((brickColX * brickColX + brickColY * brickColY) < (ballRadius * ballRadius))){
+                    if(brickDistX < (brickWidth / 2) && brickDistY <(brickHeight / 2) || ((brickColX * brickColX + brickColY * brickColY) < (ballRadius * ballRadius))){
                         dy = -dy;
                         brickObj.appearance = false;
                         score++;
@@ -101,9 +104,6 @@ window.onload = function(){
                                 ctx.lineWidth = 3;
                                 ctx.strokeStyle = "red";
                                 ctx.strokeRect(0, 0, canvas.width, canvas.height);
-                                document.querySelector('.endgame-win').addEventListener("click", function(){
-                                document.location.reload();
-                            });
                         }
                     }
                 }
@@ -147,6 +147,9 @@ window.onload = function(){
         gameOverBox.setAttribute("class", "endgame-lose");
         gameOverBox.innerHTML = "Game Over!<br><span>Don't give up try harder!</span><br><span>Click here to retry</span><br><br>" + "<span>" + userName + "</span><br>" + "<span>Score: </span>" + score + " " + "<span>---</span>" + " " + "<span>Lives: </span>" + lives;
         document.body.appendChild(gameOverBox);
+        document.querySelector('.endgame-lose').addEventListener("click", function(){
+            document.location.reload();
+        });
     }
 
     // Create win screen
@@ -155,6 +158,9 @@ window.onload = function(){
         winBox.setAttribute("class", "endgame-win");
         winBox.innerHTML = "Congratulation!<br><span>You beat the game<br>Click here to retry</span></span><br><br>" + "<span>" + userName + "</span><br>" + "<span>Score: </span>" + score + " " + "<span>---</span>" + " " + "<span>Lives: </span>" + lives;
         document.body.appendChild(winBox);
+        document.querySelector('.endgame-win').addEventListener("click", function(){
+            document.location.reload();
+        });
     }
 
     // Get user input on whether they want to use keyboard or mouse in prompt outside window onload function
@@ -167,11 +173,11 @@ window.onload = function(){
             document.addEventListener("mousemove", mouseMove, false);
         }
         else{
+            alert("No such option game reloading...");
             document.location.reload();
         }
     }
     choice(optionLower);
-
 
     // Ball accelerate when a block is hit. Speed reset back to normal if lose 1 lives
     var ballAccel = function(){
@@ -200,6 +206,11 @@ window.onload = function(){
         if (timer < 0) {
             clearInterval(countDown);
             clearInterval(interval);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "red";
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "red";
+            ctx.strokeRect(0, 0, canvas.width, canvas.height);
             alert("Times up");
             var retry = prompt("Do you want to try again? Y/N");
             var retryLower = retry.toLowerCase();

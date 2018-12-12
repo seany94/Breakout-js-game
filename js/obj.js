@@ -14,13 +14,13 @@ var lives = 3;
 var timer = 60;
 
 // Bricks style
-var brickRow = getRandom(2, 6);
+var brickRow = 5;
 var brickCol = 8;
-var brickWidth = getRandom(50, 75);
+var brickWidth = 75;
 var brickHeight = 20;
 var brickPadding = 10;
 var brickOffsetTop = 30;
-var brickOffsetLeft = 30;
+var brickOffsetLeft = 15;
 
 var bricksArr = [];
 for(var i = 0; i < brickCol; i++){
@@ -40,10 +40,6 @@ function getRandom(min, max){
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-// Define the number of rows and columns of bricks
-// var brickRows = getRandom(2, 5);
-// var brickCols = getRandom(8, 15);
-
 // Random the position where the ball will start and how it moves
 var x = getRandom(100, 650);
 var y = getRandom(300, 600);
@@ -55,11 +51,11 @@ var dy = -2;
 var ballSpeed = 10;
 
 // Circumference of ball & random the size
-var ballRadius = getRandom(5, 20);
+var ballRadius = 10;
 
 // Create paddle & random paddle width
 var paddleHeight = 10;
-var paddleWidth = getRandom(80, 200);
+var paddleWidth = 100;
 var paddle = (canvas.width - paddleWidth) / 2;
 
 // Check for user key press
@@ -68,27 +64,57 @@ var leftPressed = false;
 
 // Check for user input and the length
 var userName = prompt("Please input your name");
-if(userName == null){
-    document.location.reload();
-}
-else if(userName.length > 20){
+
+    if(userName === null){
+        alert("Input empty game reloading...");
+        document.location.reload();
+    }
+    else if(userName.length > 20){
         alert("Limit username to 20 characters max");
         document.location.reload();
-}
+    }
 
 // Check for user input on using mouse or keyboard
 var option = prompt("Do you want to use the keyboard or the mouse to play? K/M");
-alert("Please note that the size of bricks/paddle/ball is randomize. Do not be alarm :D\nGet in there the timer is counting down");
 var optionLower = option.toLowerCase();
-if(option == null){
-    document.location.reload();
-}
+
+// var stageOption = prompt("Which difficulty do you want to challenge?\nEasy/Hard/Insane");
+// var stageOptionLower = stageOption.toLowerCase();
+
+//     if(stageOptionLower.includes('e') === true){
+//         stageE();
+//     }
+//     else if(stageOptionLower.includes('h') === true){
+//         stageH();
+//     }
+//     if(stageOptionLower.includes('i') === true){
+//         stageI();
+//     }
+//     else{
+//         alert("No such option game reloading...");
+//         document.location.reload();
+//     }
+
+// var stageE = function(){
+//     var brickRow = getRandom(2, 6);
+//     var brickWidth = getRandom(50, 75);
+//     var ballRadius = getRandom(5, 20);
+//     var paddleWidth = getRandom(80, 200);
+// }
+
+// alert("Please note that the size of bricks/paddle/ball is randomize. Do not be alarm :D\nGet in there the timer is counting down");
 
 var createTimer = function(){
     ctx.font = "50px Helvetica";
     ctx.fillStyle = "rgb(186, 57, 118)";
-    ctx.weight = "bold";
     ctx.fillText(timer, 325, 350);
+}
+
+var createTimerText = function(){
+    ctx.font = "italic bold 23px Helvetica";
+    ctx.fillStyle = "rgb(186, 57, 118)";
+    ctx.weight = "700";
+    ctx.fillText("Hurry up! The World is ending!", 200, 380);
 }
 
 var createBallSpeed = function(){
