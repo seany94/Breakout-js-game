@@ -4,6 +4,8 @@ Breakout JavaScript Game
 
 Link:- https://seany94.github.io/Breakout-js-game/
 
+PS: If you are that good use keyboard instead of mouse.
+
 Requirements:-
 1. Display bricks on document body
 2. Create player control slider that uses keydown Left and Right to move / Press or hold key to move

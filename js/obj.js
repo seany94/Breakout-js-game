@@ -12,25 +12,19 @@ var cx = 100;
 var brickBg = new Image();
 brickBg.src = "images/bg.jpg";
 
-// Added paddle background
-var paddleBg = new Image
-
 // Track score, lives and timer
 var score = 0;
 var lives = 3;
 var timer = 60;
 
 // Bricks style
-var brickRow = 5;
-var brickCol = 8;
-var brickWidth = 75;
+var brickRow = getRandom(8, 12);
+var brickCol = getRandom(10, 18);
+var brickWidth = getRandom(20, 40);
 var brickHeight = 20;
 var brickPadding = 10;
 var brickOffsetTop = 30;
 var brickOffsetLeft = 15;
-
-// Remaining bricks on canvas
-var bricksLeft = brickRow * brickCol;
 
 var bricksArr = [];
 for(var i = 0; i < brickCol; i++){
@@ -61,11 +55,11 @@ var dy = -2;
 var ballSpeed = 10;
 
 // Circumference of ball & random the size
-var ballRadius = 10;
+var ballRadius = getRandom(3, 7);
 
 // Create paddle & random paddle width
 var paddleHeight = 10;
-var paddleWidth = 100;
+var paddleWidth = getRandom(30, 80);
 var paddle = (canvas.width - paddleWidth) / 2;
 
 // Check for user key press
@@ -88,36 +82,53 @@ var userName = prompt("Please input your name");
 var option = prompt("Do you want to use the keyboard or the mouse to play? K/M");
 var optionLower = option.toLowerCase();
 
-// var stageOption = prompt("Which difficulty do you want to challenge?\nEasy/Hard/Insane");
-// var stageOptionLower = stageOption.toLowerCase();
+var stageOption = prompt("Which difficulty do you want to challenge?\nEasy/Hard/Crazy");
+var stageOptionLower = stageOption.toLowerCase();
 
-//     if(stageOptionLower.includes('e') === true){
-//         stageE();
-//     }
-//     else if(stageOptionLower.includes('h') === true){
-//         stageH();
-//     }
-//     if(stageOptionLower.includes('i') === true){
-//         stageI();
-//     }
-//     else{
-//         alert("No such option game reloading...");
-//         document.location.reload();
-//     }
+    if(stageOptionLower.includes('e') === true){
+        alert("Earth is currently being assaulted. Not much time is left so get in there and destroy the enemy bricks!. The timer is counting down so hurry!");
+        stageOption = "Easy";
+        brickRow = getRandom(3, 8);
+        brickCol = 8;
+        brickWidth = 75;
+        ballRadius = 10;
+        paddleWidth = 100;
+        // Remaining bricks on canvas
+        var bricksLeft = brickRow * brickCol;
+    }
+    else if(stageOptionLower.includes('h') === true){
+        alert("Please note that the size of bricks/paddle/ball is randomize for Hard and Crazy difficulty. Do not be alarm :D\n\nEarth is currently being assaulted. Not much time is left so get in there and destroy the enemy bricks!. The timer is counting down so hurry!");
+        stageOption = "Hard";
+        brickRow = getRandom(4, 7);
+        brickCol = getRandom(8, 11);
+        brickWidth = getRandom(45, 60);
+        ballRadius = getRandom(7, 9);
+        paddleWidth = getRandom(60, 90);
+        // Remaining bricks on canvas
+        var bricksLeft = brickRow * brickCol;
+    }
+    else if(stageOptionLower.includes('c') === true){
+        alert("Please note that the size of bricks/paddle/ball is randomize for Hard and Crazy difficulty. Do not be alarm :D\n\nEarth is currently being assaulted. Not much time is left so get in there and destroy the enemy bricks!. The timer is counting down so hurry!");
+        // return the global variable untouched
+        stageOption = "Crazy";
+        // Remaining bricks on canvas
+        var bricksLeft = brickRow * brickCol;
+    }
+    else if(stageOptionLower.includes('e') !== true){
+        alert("No such option game reloading...");
+        document.location.reload();
+    }
 
-// var stageE = function(){
-//     var brickRow = getRandom(2, 6);
-//     var brickWidth = getRandom(50, 75);
-//     var ballRadius = getRandom(5, 20);
-//     var paddleWidth = getRandom(80, 200);
-// }
-
-// alert("Please note that the size of bricks/paddle/ball is randomize. Do not be alarm :D\nGet in there the timer is counting down");
+var createStage = function(){
+    ctx.font = "italic lighter 18px Helvetica";
+    ctx.fillStyle = "#7EFF37FF";
+    ctx.fillText("Difficulty: " + stageOption, 370, 265);
+}
 
 var createBricksLeft = function(){
-    ctx.font = "italic lighter 20px Helvetica";
+    ctx.font = "italic lighter 18px Helvetica";
     ctx.fillStyle = "#7EFF37FF";
-    ctx.fillText("Bricks left: " + bricksLeft, 290, 265);
+    ctx.fillText("Bricks left: " + bricksLeft, 230, 265);
 }
 
 var createTimer = function(){
@@ -129,7 +140,7 @@ var createTimer = function(){
 var createTimerText = function(){
     ctx.font = "italic bold 23px Helvetica";
     ctx.fillStyle = "rgb(186, 57, 118)";
-    ctx.fillText("Hurry up! The World is ending!", 200, 380);
+    ctx.fillText("Hurry up! Earth is getting invaded!", 175, 380);
 }
 
 var createBallSpeed = function(){

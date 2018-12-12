@@ -20,9 +20,10 @@ window.onload = function(){
         createPaddle();
         createBallSpeed();
         createTimer();
+        createStage();
         collision();
         // Check for timer and print timer text
-        if(timer < 20){
+        if(timer < 50){
             createTimerText();
         }
         // Calculate the collision at line of the paddle
@@ -72,15 +73,15 @@ window.onload = function(){
         }
         // Checking for whether the paddle goes off the canvas
         else if(rightPressed && paddle < canvas.width - paddleWidth){
-            paddle += 7;
+            paddle += 8;
         }
         else if(leftPressed && paddle > 0){
-            paddle -= 7;
+            paddle -= 8;
         }
     }
 
     // Detect collision for every brick in row and column
-    function collision(){
+    var collision = function(){
         for(var i = 0; i < brickCol; i++){
             for(var j = 0; j < brickRow; j++){
                 var brickObj = bricksArr[i][j];
@@ -207,7 +208,7 @@ window.onload = function(){
     // Check for time remaining
     var countDown = setInterval(function() {
         timer--;
-        if (timer < 0) {
+            if (timer < 0) {
             clearInterval(countDown);
             clearInterval(interval);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -220,9 +221,6 @@ window.onload = function(){
             var retryLower = retry.toLowerCase();
             if(retryLower.includes("y") === true){
                 document.location.reload();
-            }
-            else if(retryLower.includes("n") === true || retry === null){
-                gameOver();
             }
             else{
                 gameOver();
