@@ -8,9 +8,10 @@ var ctx = canvas.getContext('2d');
 // var background = new Image();
 // background.src = "images/bg.jpg";
 
-// Track score and lives
+// Track score, lives and timer
 var score = 0;
 var lives = 3;
+var timer = 60;
 
 // Bricks style
 var brickRow = getRandom(2, 6);
@@ -19,7 +20,7 @@ var brickWidth = getRandom(50, 75);
 var brickHeight = 20;
 var brickPadding = 10;
 var brickOffsetTop = 30;
-var brickOffsetLeft = 15;
+var brickOffsetLeft = 30;
 
 var bricksArr = [];
 for(var i = 0; i < brickCol; i++){
@@ -50,6 +51,9 @@ var y = getRandom(300, 600);
 var dx = 2;
 var dy = -2;
 
+// Ball speed
+var ballSpeed = 10;
+
 // Circumference of ball & random the size
 var ballRadius = getRandom(5, 20);
 
@@ -74,10 +78,24 @@ else if(userName.length > 20){
 
 // Check for user input on using mouse or keyboard
 var option = prompt("Do you want to use the keyboard or the mouse to play? K/M");
-alert("Please note that the size of bricks/paddle/ball is randomize. Do not be alarm :D");
+alert("Please note that the size of bricks/paddle/ball is randomize. Do not be alarm :D\nGet in there the timer is counting down");
 var optionLower = option.toLowerCase();
 if(option == null){
     document.location.reload();
+}
+
+var createTimer = function(){
+    ctx.font = "50px Helvetica";
+    ctx.fillStyle = "rgb(186, 57, 118)";
+    ctx.weight = "bold";
+    ctx.fillText(timer, 325, 350);
+}
+
+var createBallSpeed = function(){
+    ctx.font = "30px Helvetica";
+    ctx.fillStyle = "rgb(186, 57, 118)";
+    ctx.weight = "bold";
+    ctx.fillText("Ball Current Speed: " + ballSpeed + " mph", 180, 300);
 }
 
 var createName = function(){

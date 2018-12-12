@@ -37,4 +37,6 @@ Further:- Input acceleration after certain number of bricks disappear
 
 Further:- Random the size and number or bricks every time the user starts a new game
 
-Further:- Add levels where slider and bricks gets smaller and ball speeds up. Increasing to 2 balls at once
+Further:- Add countdown timer at background 
+
+Further:- Let user choose 3 different stages of difficulty easy/hard/insane

@@ -15,9 +15,12 @@ window.onload = function(){
         createBricks();
         createBall();
         createPaddle();
+        createBallSpeed();
+        createTimer();
         collision();
-        // Calculate the collision at the edge of the paddle
+        // Calculate the collision at line of the paddle
         var paddleDistX = Math.abs(x - paddle - paddleWidth / 2);
+        // Calculate the collision at the edge of the paddle
         var paddleColX = paddleDistX - paddleWidth / 2;
         x += dx;
         y += dy;
@@ -30,16 +33,18 @@ window.onload = function(){
         }
         else if(y + dy > canvas.height - ballRadius){
             // Condition to allow the ball to bounce off paddle so as to not to end game + added collision to edge of paddle
-            if(x > paddle && x < paddle + paddleWidth || (paddleColX * paddleColX < (ballRadius * ballRadius))){
+            if(paddleDistX < paddleWidth || (paddleColX * paddleColX < (ballRadius * ballRadius))){
                 dy = -dy;
             }
             else {
                 // Check for how many lives when 0 end the game
                 lives--;
+                ballSpeed = 10;
                 if(lives === 0){
                     // Stop ball from moving and show game over screen
                     gameOver();
                     clearInterval(interval);
+                    clearInterval(countDown);
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.fillStyle = "red";
                     ctx.lineWidth = 3;
@@ -75,7 +80,13 @@ window.onload = function(){
                 var brickObj = bricksArr[i][j];
                 // Check if ball collide with brick if so ball bounce back and brick disappear
                 if(brickObj.appearance === true){
-                    if(x > brickObj.x && x < brickObj.x + brickWidth && y > brickObj.y && y < brickObj.y + brickHeight || ((x * x + y * y) < (ballRadius * ballRadius))){
+                    // Calculate the collision at the line of the brick
+                    var brickDistX = Math.abs(x - brickObj.x - brickWidth / 2);
+                    var brickDistY = Math.abs(y - brickObj.y - brickHeight / 2);
+                    // Calculate the collision at the edge of the brick
+                    var brickColX = brickDistX - brickWidth / 2;
+                    var brickColY = brickDistY - brickHeight / 2;
+                    if(brickDistX < brickWidth && brickDistY <brickHeight || ((brickColX * brickColX + brickColY * brickColY) < (ballRadius * ballRadius))){
                         dy = -dy;
                         brickObj.appearance = false;
                         score++;
@@ -84,6 +95,7 @@ window.onload = function(){
                             if(score === brickRow * brickCol){
                                 win();
                                 clearInterval(interval);
+                                clearInterval(countDown);
                                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                                 ctx.fillStyle = "red";
                                 ctx.lineWidth = 3;
@@ -166,29 +178,40 @@ window.onload = function(){
         if(dx === 2 || dy === -2){
             dx = dx * 1.5;
             dy = dy * 1.5;
+            ballSpeed += 15;
         }
         else if(dx === 3 || dy === -3){
             dx = dx * 1.5;
             dy = dy * 1.5;
+            ballSpeed += 5;
         }
         else if(dx === 4.5 || dy === -4.5){
             dx = dx * 1.2;
             dy = dy * 1.2;
+            ballSpeed += 20;
         }
     }
 
     var interval = setInterval(moveBall, 8);
 
-    // var ballAccel = function() {
-    //     console.log(dx);
-    //     console.log(dy);
-    //     if(dx < 7 && dy < 7) {
-    //         dx += 2;
-    //         dy += 2;
-    //     }
-    //     else{
-    //         dx = 7;
-    //         dx = 7;
-    //     }
-    // }
+    // Check for time remaining
+    var countDown = setInterval(function() {
+        timer--;
+        if (timer < 0) {
+            clearInterval(countDown);
+            clearInterval(interval);
+            alert("Times up");
+            var retry = prompt("Do you want to try again? Y/N");
+            var retryLower = retry.toLowerCase();
+            if(retryLower.includes("y") === true){
+                document.location.reload();
+            }
+            else if(retryLower.includes("n") === true || retry === null){
+                gameOver();
+            }
+            else{
+                gameOver();
+            }
+        }
+    }, 1000);
 }
