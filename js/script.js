@@ -22,7 +22,7 @@ window.onload = function(){
         createStage();
         collision();
         // Check for timer and print timer text
-        if(timer < 50){
+        if(timer < 20){
             createTimerText();
         }
         // Calculate the collision at line of the paddle
