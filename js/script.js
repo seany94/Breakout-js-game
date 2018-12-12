@@ -4,7 +4,6 @@ window.onload = function(){
         // Clear the canvas every time the function run
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         // Recreate canvas after clearing
-        // ctx.drawImage(background, 0, 0);
         ctx.fillStyle = "red";
         ctx.lineWidth = 3;
         ctx.strokeStyle = "red";
@@ -202,7 +201,7 @@ window.onload = function(){
             ballSpeed += 20;
         }
     }
-
+    // Print every objects onto canvas
     var interval = setInterval(moveBall, 8);
 
     // Check for time remaining

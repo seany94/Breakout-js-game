@@ -4,7 +4,7 @@ canvas.width = 700;
 canvas.height = 600;
 var ctx = canvas.getContext('2d');
 
-// Replicate z-index in html
+// Replicate z-index in html so ball will be in front of all objects
 ctx.globalCompositeOperation = 'destination-over';
 var cx = 100;
 
@@ -26,6 +26,7 @@ var brickPadding = 10;
 var brickOffsetTop = 30;
 var brickOffsetLeft = 15;
 
+// Assign bricks into array
 var bricksArr = [];
 for(var i = 0; i < brickCol; i++){
     bricksArr[i] = [];
@@ -82,6 +83,7 @@ var userName = prompt("Please input your name");
 var option = prompt("Do you want to use the keyboard or the mouse to play? K/M");
 var optionLower = option.toLowerCase();
 
+// Check what difficulty user want to challenge
 var stageOption = prompt("Which difficulty do you want to challenge?\nEasy/Hard/Crazy");
 var stageOptionLower = stageOption.toLowerCase();
 
