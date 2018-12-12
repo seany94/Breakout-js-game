@@ -4,9 +4,16 @@ canvas.width = 700;
 canvas.height = 600;
 var ctx = canvas.getContext('2d');
 
-// // Added canvas background
-// var background = new Image();
-// background.src = "images/bg.jpg";
+// Replicate z-index in html
+ctx.globalCompositeOperation = 'destination-over';
+var cx = 100;
+
+// Added brick background
+var brickBg = new Image();
+brickBg.src = "images/bg.jpg";
+
+// Added paddle background
+var paddleBg = new Image
 
 // Track score, lives and timer
 var score = 0;
@@ -21,6 +28,9 @@ var brickHeight = 20;
 var brickPadding = 10;
 var brickOffsetTop = 30;
 var brickOffsetLeft = 15;
+
+// Remaining bricks on canvas
+var bricksLeft = brickRow * brickCol;
 
 var bricksArr = [];
 for(var i = 0; i < brickCol; i++){
@@ -104,8 +114,14 @@ var optionLower = option.toLowerCase();
 
 // alert("Please note that the size of bricks/paddle/ball is randomize. Do not be alarm :D\nGet in there the timer is counting down");
 
+var createBricksLeft = function(){
+    ctx.font = "italic lighter 20px Helvetica";
+    ctx.fillStyle = "#7EFF37FF";
+    ctx.fillText("Bricks left: " + bricksLeft, 290, 265);
+}
+
 var createTimer = function(){
-    ctx.font = "50px Helvetica";
+    ctx.font = "bold 50px Helvetica";
     ctx.fillStyle = "rgb(186, 57, 118)";
     ctx.fillText(timer, 325, 350);
 }
@@ -113,35 +129,29 @@ var createTimer = function(){
 var createTimerText = function(){
     ctx.font = "italic bold 23px Helvetica";
     ctx.fillStyle = "rgb(186, 57, 118)";
-    ctx.weight = "700";
     ctx.fillText("Hurry up! The World is ending!", 200, 380);
 }
 
 var createBallSpeed = function(){
     ctx.font = "30px Helvetica";
     ctx.fillStyle = "rgb(186, 57, 118)";
-    ctx.weight = "bold";
     ctx.fillText("Ball Current Speed: " + ballSpeed + " mph", 180, 300);
 }
 
 var createName = function(){
     ctx.font = "15px Helvetica";
     ctx.fillStyle = "#7EFF37FF";
-    ctx.weight = "bold";
     ctx.fillText(userName, 8, 18);
 }
 
 var createScore = function(){
     ctx.font = "15px Helvetica";
     ctx.fillStyle = "#7EFF37FF";
-    ctx.weight = "bold";
     ctx.fillText("Score: " + score, 325, 18);
 }
 
 var createLives = function(){
     ctx.font = "15px Helvetica";
-    ctx.fillStyle = "#7EFF37FF";
-    ctx.weight = "bold";
     ctx.fillText("Lives: " + lives, 640, 18);
 }
 
@@ -174,9 +184,11 @@ var createBricks = function(){
                 bricksArr[i][j].y = brickY;
                 // Create bricks
                 ctx.beginPath();
+                ctx.save();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = "#AFFF91FF";
-                ctx.fill();
+                ctx.clip();
+                ctx.drawImage(brickBg, 0, 0);
+                ctx.restore();
                 ctx.closePath();
             }
         }

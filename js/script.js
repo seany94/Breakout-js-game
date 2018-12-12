@@ -9,11 +9,14 @@ window.onload = function(){
         ctx.lineWidth = 3;
         ctx.strokeStyle = "red";
         ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        createBall();
+        // Create ball thats go in front of any text on screen
+        cx += 20;
         createName();
         createScore();
         createLives();
         createBricks();
-        createBall();
+        createBricksLeft();
         createPaddle();
         createBallSpeed();
         createTimer();
@@ -93,6 +96,7 @@ window.onload = function(){
                         dy = -dy;
                         brickObj.appearance = false;
                         score++;
+                        bricksLeft--;
                         ballAccel();
                             // Check if all bricks disappear from canvas to declare win
                             if(score === brickRow * brickCol){
